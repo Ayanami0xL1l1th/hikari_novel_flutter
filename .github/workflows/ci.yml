@@ -18,6 +18,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Cache Flutter
+        uses: actions/cache@v4
+        with:
+          path: ~/flutter
+          key: flutter-${{ env.FLUTTER_VERSION }}
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -30,6 +36,10 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           $flutterDir = "$Env:USERPROFILE\flutter"
+          if (Test-Path "$flutterDir\flutter\bin\flutter.bat") {
+  "$flutterDir\flutter\bin" | Out-File -FilePath $Env:GITHUB_PATH -Append
+  exit 0
+}
           Remove-Item $flutterDir -Recurse -Force -ErrorAction SilentlyContinue
           $zip = "$Env:USERPROFILE\flutter.zip"
           $official = "https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_${Env:FLUTTER_VERSION}-stable.zip"
