@@ -54,9 +54,9 @@ jobs:
               return $false
             }
           }
-          if (-not (Download $mirror)) {
-            Write-Host "Mirror failed, switching to official CDN..."
-            Download $official | Out-Null
+          if (-not (Download $official)) {
+            Write-Host "Official CDN failed, switching to mirror..."
+            Download $mirror | Out-Null
           }
           if (-not (Test-Path $zip)) {
             throw "Flutter download failed from all sources."
